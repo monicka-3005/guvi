@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+    <head>
+        <title></title>
+        <link href="style.css" rel="stylesheet" type="text/css" >
+
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap" rel="stylesheet">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+        <body>
+            <form action="signup.php" method="post"></form> 
+            <form action="config.php" method="post"></form> 
+            <div class="form">
+                <form autocomplete="off" id="myForm">
+                    <div class="banner">
+                    </div>
+                    <h1>create an account</h1>
+                    <div class="form-message"></div>
+                    <div class="row">
+                        <div class="field column">
+                            <label>First Name:</label>
+                            <input type="text" name="firstname">
+                        </div>
+
+                        <div class="field column">
+                            <label>Last Name:</label>
+                            <input type="text" name="lastname">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="field column">
+                            <label>Email:</label>
+                            <input type="email" name="email">
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="field column">
+                            <label>password:</label>
+                            <input type="password" name="password">
+                        </div>
+                        <div class="field column">
+                            <label>Upload picture:</label>
+                            <input type="file" name="file">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="field column">
+                            <label>click here</label>
+                            <input type="submit" name="submit_btn" value="sign up">
+                        </div>
+                    </div>    
+                </form>
+            </div>
+            <script type="text/javascript">
+                $(document).ready(function(){
+                    $("#myForm").on('submit',function(e){
+                        e.preventDefault();
+                        $.ajax({
+                            type:"POST",
+                            url:"signup.php",
+                            data:new FormData(this),
+                            dataType:"json",
+                            contentType:false,
+                            cache:false,
+                            processData:false,
+
+                            success:function(response){
+                                $(".form-message").css("display","block");
+                                if(response.status==1){
+                                    $("#myform")[0].reset();
+                                    $(".form-message").html('<p>' + response.message +'</p>');
+
+                                }
+                                else{
+                                    $(".form-message").html('<p>' + response.message +'</p>');
+
+                                }
+                            }
+                        });
+                    });
+
+                    $("#file").change(function(){
+                        var file=this.files[0];
+                        var fileType=file.type;
+                        var match=['image/jpeg','image/jpg','image/png'];
+                        if(!((fileType==match[0]) || (fileType==match[1]) || (fileType==match[2]))){
+                            alert("Sorry,only JPEG,JPG AND PNG files are allowed to upload");
+                            $("#file").val('');
+                            return false;
+                        }
+                    });
+                });
+            </script>
+        </body>
+</<html>
